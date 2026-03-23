@@ -4,53 +4,187 @@
   <meta charset="UTF-8">
   <title>Web AR Casa Rischi</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
-
-  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #infoBox {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      width: 85%;
+      max-width: 420px;
+      background: rgba(0, 0, 0, 0.82);
+      color: white;
+      padding: 14px 16px;
+      border-radius: 14px;
+      z-index: 999;
+      display: none;
+      box-sizing: border-box;
+    }
+
+    #infoTitle {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    #infoText {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    #closeBtn {
+      margin-top: 10px;
+      border: none;
+      background: white;
+      color: black;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    #hint {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      z-index: 999;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
-  <a-scene 
+  <div id="hint">Inquadra la casa e tocca i punti per scoprire i rischi</div>
+
+  <div id="infoBox">
+    <div id="infoTitle"></div>
+    <div id="infoText"></div>
+    <button id="closeBtn">Chiudi</button>
+  </div>
+
+  <a-scene
     mindar-image="imageTargetSrc: targets.mind;"
     vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: true">
+    device-orientation-permission-ui="enabled: true"
+    cursor="rayOrigin: mouse; fuse: false"
+    raycaster="objects: .clickable">
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- TARGET -->
-<a-entity mindar-image-target="targetIndex: 0">
+    <a-entity mindar-image-target="targetIndex: 0">
 
-  <!-- CUCINA -->
-  <a-text 
-    value="Distrazione durante la cottura"
-    color="red"
-    align="center"
-    width="2"
-    position="-0.5 0.5 0">
-  </a-text>
+      <!-- Etichette -->
+      <a-text
+        value="Cucina"
+        color="red"
+        align="center"
+        width="2"
+        position="-0.5 0.62 0">
+      </a-text>
 
-  <!-- SALOTTO -->
-  <a-text 
-    value="Postura scorretta e interferenze"
-    color="yellow"
-    align="center"
-    width="2"
-    position="0.5 0.2 0">
-  </a-text>
+      <a-text
+        value="Salotto"
+        color="yellow"
+        align="center"
+        width="2"
+        position="0.5 0.28 0">
+      </a-text>
 
-  <!-- SCALE -->
-  <a-text 
-    value="Rischio di inciampo"
-    color="orange"
-    align="center"
-    width="2"
-    position="0 -0.3 0">
-  </a-text>
+      <a-text
+        value="Scale"
+        color="orange"
+        align="center"
+        width="2"
+        position="0 -0.22 0">
+      </a-text>
 
-</a-entity>
+      <!-- Hotspot cucina -->
+      <a-circle
+        class="clickable"
+        id="hotspot-cucina"
+        color="red"
+        radius="0.06"
+        position="-0.5 0.48 0"
+        material="shader: flat; opacity: 0.9">
+      </a-circle>
 
+      <!-- Hotspot salotto -->
+      <a-circle
+        class="clickable"
+        id="hotspot-salotto"
+        color="yellow"
+        radius="0.06"
+        position="0.5 0.14 0"
+        material="shader: flat; opacity: 0.9">
+      </a-circle>
+
+      <!-- Hotspot scale -->
+      <a-circle
+        class="clickable"
+        id="hotspot-scale"
+        color="orange"
+        radius="0.06"
+        position="0 -0.36 0"
+        material="shader: flat; opacity: 0.9">
+      </a-circle>
+
+    </a-entity>
   </a-scene>
+
+  <script>
+    const infoBox = document.getElementById("infoBox");
+    const infoTitle = document.getElementById("infoTitle");
+    const infoText = document.getElementById("infoText");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function apriScheda(titolo, testo) {
+      infoTitle.textContent = titolo;
+      infoText.textContent = testo;
+      infoBox.style.display = "block";
+    }
+
+    closeBtn.addEventListener("click", () => {
+      infoBox.style.display = "none";
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const cucina = document.getElementById("hotspot-cucina");
+      const salotto = document.getElementById("hotspot-salotto");
+      const scale = document.getElementById("hotspot-scale");
+
+      cucina.addEventListener("click", () => {
+        apriScheda(
+          "Cucina",
+          "La distrazione durante la cottura, insieme a oggetti fuori posto e cavi visibili, può aumentare il rischio di ustioni, urti o inciampo."
+        );
+      });
+
+      salotto.addEventListener("click", () => {
+        apriScheda(
+          "Salotto",
+          "Lavorare con il portatile sulle gambe e con continue interferenze familiari può favorire posture scorrette, affaticamento e calo dell'attenzione."
+        );
+      });
+
+      scale.addEventListener("click", () => {
+        apriScheda(
+          "Scale",
+          "Oggetti lasciati sui gradini o passaggi poco liberi possono aumentare il rischio di inciampo e caduta."
+        );
+      });
+    });
+  </script>
 </body>
 </html>

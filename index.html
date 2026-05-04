@@ -84,10 +84,12 @@
     </div>
   </div>
 
-  <a-scene 
-    mindar-image="imageTargetSrc: targets.mind;"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: true">
+<a-scene 
+  mindar-image="imageTargetSrc: targets.mind;"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: true"
+  cursor="rayOrigin: mouse"
+  raycaster="objects: [id^=hotspot]">
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 

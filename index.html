@@ -75,17 +75,12 @@
 
   <div id="controls">
     <div id="buttons">
-      <button class="risk-btn" onclick="apriScheda('Rischio domestico', 'Oggetti instabili, distrazioni e spazi non organizzati possono aumentare il rischio di urti, cadute e piccoli infortuni durante il lavoro agile.')">Rischio domestico</button>
-
-      <button class="risk-btn" onclick="apriScheda('Rischio elettrico', 'Dispositivi elettrici, prese e cavi vicino ad acqua o superfici bagnate aumentano il rischio elettrico.')">Rischio elettrico</button>
-
-      <button class="risk-btn" onclick="apriScheda('Cucina', 'Cucinare mentre si lavora o si guarda il cellulare può causare distrazioni, ustioni, tagli e inciampi.')">Cucina</button>
-
-      <button class="risk-btn" onclick="apriScheda('Postura', 'Lavorare da divano, letto o con il portatile sulle gambe favorisce posture scorrette e affaticamento muscolo-scheletrico.')">Postura</button>
-
-      <button class="risk-btn" onclick="apriScheda('Giardino', 'Giochi, cavi e oggetti lasciati a terra possono diventare ostacoli e causare inciampi.')">Giardino</button>
-
-      <button class="risk-btn" onclick="apriScheda('Scale', 'Oggetti sui gradini e disattenzione aumentano il rischio di inciampo e caduta.')">Scale</button>
+<button onclick="apriScheda('Rischio domestico','testo...',1)">Rischio domestico</button>
+<button onclick="apriScheda('Rischio elettrico','testo...',2)">Rischio elettrico</button>
+<button onclick="apriScheda('Cucina','testo...',3)">Cucina</button>
+<button onclick="apriScheda('Postura','testo...',4)">Postura</button>
+<button onclick="apriScheda('Giardino','testo...',5)">Giardino</button>
+<button onclick="apriScheda('Scale','testo...',6)">Scale</button>
     </div>
 
     <div id="infoBox">
@@ -103,6 +98,17 @@
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity id="target" mindar-image-target="targetIndex: 0">
+
+      <!-- HIGHLIGHT BOX -->
+
+<a-plane id="box1" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 0.24 0"></a-plane>
+<a-plane id="box2" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 0.24 0"></a-plane>
+
+<a-plane id="box3" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 0.02 0"></a-plane>
+<a-plane id="box4" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 0.02 0"></a-plane>
+
+<a-plane id="box5" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 -0.20 0"></a-plane>
+<a-plane id="box6" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 -0.20 0"></a-plane>
 
       <!-- Etichette AR sulla griglia 2x3 -->
       <a-text value="RISCHIO DOMESTICO" color="#ffffff" align="center" width="2" position="-0.38 0.24 0"></a-text>
@@ -125,11 +131,20 @@
     const infoText = document.getElementById("infoText");
     const target = document.getElementById("target");
 
-    function apriScheda(titolo, testo) {
-      infoTitle.textContent = titolo;
-      infoText.textContent = testo;
-      infoBox.style.display = "block";
-    }
+  function resetBox() {
+  for (let i = 1; i <= 6; i++) {
+    document.getElementById("box"+i).setAttribute("opacity", "0");
+  }
+}
+
+function apriScheda(titolo, testo, box) {
+  resetBox();
+  document.getElementById("box"+box).setAttribute("opacity", "0.3");
+
+  infoTitle.textContent = titolo;
+  infoText.textContent = testo;
+  infoBox.style.display = "block";
+}
 
     function chiudiScheda() {
       infoBox.style.display = "none";

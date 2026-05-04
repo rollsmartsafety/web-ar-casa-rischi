@@ -142,7 +142,13 @@ function apriScheda(titolo, testo, box) {
     function chiudiScheda() {
       infoBox.style.display = "none";
     }
-
+document.getElementById("hotspot-bambina").addEventListener("click", () => {
+  apriScheda(
+    "Interferenze lavoro-famiglia",
+    "La presenza di bambini durante il lavoro agile può ridurre la concentrazione, aumentare il rischio di errori e generare stress. La sovrapposizione dei ruoli può portare a minore vigilanza, possibili danni fisici ai dispositivi e perdita accidentale di dati aziendali.",
+    1
+  );
+});
     target.addEventListener("targetFound", () => {
       controls.style.display = "block";
     });

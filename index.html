@@ -15,104 +15,88 @@
       overflow: hidden;
     }
 
-    #hint {
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.72);
-      color: white;
-      padding: 10px 14px;
-      border-radius: 12px;
-      z-index: 1000;
-      font-size: 14px;
-      text-align: center;
-    }
-
     #controls {
       position: fixed;
       left: 50%;
-      bottom: 20px;
+      bottom: 18px;
       transform: translateX(-50%);
       width: 92%;
-      max-width: 430px;
-      z-index: 1000;
+      max-width: 460px;
+      z-index: 999;
       display: none;
     }
 
     #buttons {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
-      flex-wrap: wrap;
       margin-bottom: 10px;
     }
 
     .risk-btn {
       border: none;
       border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 14px;
+      padding: 10px 12px;
       font-weight: bold;
-      background: rgba(255,255,255,0.95);
+      background: white;
       color: #111;
+      font-size: 13px;
     }
 
     #infoBox {
-      background: rgba(0, 0, 0, 0.84);
-      color: white;
-      padding: 14px 16px;
-      border-radius: 14px;
       display: none;
-      box-sizing: border-box;
+      background: rgba(0,0,0,0.86);
+      color: white;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      line-height: 1.4;
     }
 
     #infoTitle {
-      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    #infoText {
-      font-size: 15px;
-      line-height: 1.4;
+      font-size: 18px;
+      margin-bottom: 6px;
     }
 
     #closeBtn {
       margin-top: 10px;
       border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
       background: white;
       color: black;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
-  <div id="hint">Inquadra il roll-up. Quando la casa viene riconosciuta, compariranno i pulsanti dei rischi.</div>
 
   <div id="controls">
     <div id="buttons">
-      <button class="risk-btn" onclick="apriScheda('Cucina', 'La distrazione durante la cottura, insieme a oggetti fuori posto e cavi visibili, può aumentare il rischio di ustioni, urti o inciampo.')">Cucina</button>
+      <button class="risk-btn" onclick="apriScheda('Rischio domestico', 'Oggetti instabili, distrazioni e spazi non organizzati possono aumentare il rischio di urti, cadute e piccoli infortuni durante il lavoro agile.')">Rischio domestico</button>
 
-      <button class="risk-btn" onclick="apriScheda('Salotto', 'Lavorare con il portatile sulle gambe e con continue interferenze familiari può favorire posture scorrette, affaticamento e calo dell attenzione.')">Salotto</button>
+      <button class="risk-btn" onclick="apriScheda('Rischio elettrico', 'Dispositivi elettrici, prese e cavi vicino ad acqua o superfici bagnate aumentano il rischio elettrico.')">Rischio elettrico</button>
 
-      <button class="risk-btn" onclick="apriScheda('Scale', 'Oggetti lasciati sui gradini o passaggi poco liberi possono aumentare il rischio di inciampo e caduta.')">Scale</button>
+      <button class="risk-btn" onclick="apriScheda('Cucina', 'Cucinare mentre si lavora o si guarda il cellulare può causare distrazioni, ustioni, tagli e inciampi.')">Cucina</button>
+
+      <button class="risk-btn" onclick="apriScheda('Postura', 'Lavorare da divano, letto o con il portatile sulle gambe favorisce posture scorrette e affaticamento muscolo-scheletrico.')">Postura</button>
+
+      <button class="risk-btn" onclick="apriScheda('Giardino', 'Giochi, cavi e oggetti lasciati a terra possono diventare ostacoli e causare inciampi.')">Giardino</button>
+
+      <button class="risk-btn" onclick="apriScheda('Scale', 'Oggetti sui gradini e disattenzione aumentano il rischio di inciampo e caduta.')">Scale</button>
     </div>
 
     <div id="infoBox">
       <div id="infoTitle"></div>
       <div id="infoText"></div>
-      <button id="closeBtn">Chiudi</button>
+      <button id="closeBtn" onclick="chiudiScheda()">Chiudi</button>
     </div>
   </div>
 
-  <a-scene
+  <a-scene 
     mindar-image="imageTargetSrc: targets.mind;"
-    color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: true">
 
@@ -120,36 +104,18 @@
 
     <a-entity id="target" mindar-image-target="targetIndex: 0">
 
-      <!-- ETICHETTE AR -->
-      <!-- Modifica questi position per spostarle -->
-      <a-text
-        value="CUCINA"
-        color="#FF3B30"
-        align="center"
-        width="1.8"
-        position="-0.55 -0.10 0"
-        scale="0.7 0.7 0.7">
-      </a-text>
+      <!-- Etichette AR sulla griglia 2x3 -->
+      <a-text value="RISCHIO DOMESTICO" color="#ffffff" align="center" width="2" position="-0.38 0.24 0"></a-text>
+      <a-text value="RISCHIO ELETTRICO" color="#ffffff" align="center" width="2" position="0.38 0.24 0"></a-text>
 
-      <a-text
-        value="SALOTTO"
-        color="#FFD60A"
-        align="center"
-        width="1.8"
-        position="0.28 0.12 0"
-        scale="0.7 0.7 0.7">
-      </a-text>
+      <a-text value="CUCINA" color="#ffff00" align="center" width="2" position="-0.38 0.02 0"></a-text>
+      <a-text value="POSTURA" color="#ffff00" align="center" width="2" position="0.38 0.02 0"></a-text>
 
-      <a-text
-        value="SCALE"
-        color="#FF9F0A"
-        align="center"
-        width="1.8"
-        position="0.02 -0.20 0"
-        scale="0.7 0.7 0.7">
-      </a-text>
+      <a-text value="GIARDINO" color="#ff9900" align="center" width="2" position="-0.38 -0.20 0"></a-text>
+      <a-text value="SCALE" color="#ff9900" align="center" width="2" position="0.38 -0.20 0"></a-text>
 
     </a-entity>
+
   </a-scene>
 
   <script>
@@ -157,7 +123,6 @@
     const infoBox = document.getElementById("infoBox");
     const infoTitle = document.getElementById("infoTitle");
     const infoText = document.getElementById("infoText");
-    const closeBtn = document.getElementById("closeBtn");
     const target = document.getElementById("target");
 
     function apriScheda(titolo, testo) {
@@ -166,9 +131,9 @@
       infoBox.style.display = "block";
     }
 
-    closeBtn.addEventListener("click", () => {
+    function chiudiScheda() {
       infoBox.style.display = "none";
-    });
+    }
 
     target.addEventListener("targetFound", () => {
       controls.style.display = "block";
@@ -179,5 +144,6 @@
       infoBox.style.display = "none";
     });
   </script>
+
 </body>
 </html>

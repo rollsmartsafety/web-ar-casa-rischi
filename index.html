@@ -18,59 +18,63 @@
 
     #hint {
       position: fixed;
-      top: 14px;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 48, 79, 0.92);
+      z-index: 9999;
+      background: rgba(0,48,79,0.92);
       color: white;
       padding: 10px 16px;
       border-radius: 12px;
-      z-index: 9999;
       font-weight: bold;
       text-align: center;
       font-size: 15px;
     }
 
-    #tapLayer {
+    #buttonPanel {
       position: fixed;
-      inset: 0;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: 94%;
+      max-width: 520px;
       z-index: 9998;
-      pointer-events: none;
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .tapButton {
-      position: absolute;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255, 0, 0, 0.01);
+    .riskButton {
       border: none;
-      pointer-events: auto;
-      cursor: pointer;
+      border-radius: 14px;
+      padding: 12px 10px;
+      background: rgba(0,169,207,0.95);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
     }
 
     #riskBox {
       position: fixed;
       left: 50%;
-      bottom: 24px;
+      bottom: 20px;
       transform: translateX(-50%);
       width: 88%;
-      max-width: 520px;
-      background: #ffffff;
+      max-width: 540px;
+      background: white;
       border: 4px solid #00304f;
       border-radius: 18px;
       padding: 18px;
       z-index: 10000;
       display: none;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
     }
 
     #riskBox h2 {
       margin: 0 0 10px;
       color: #00304f;
       font-size: 22px;
-      line-height: 1.2;
     }
 
     #riskBox p {
@@ -82,14 +86,13 @@
 
     #closeRisk {
       margin-top: 14px;
-      background: #00a9cf;
+      background: #00304f;
       color: white;
       border: none;
       border-radius: 10px;
       padding: 10px 18px;
       font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -97,12 +100,20 @@
 <body>
 
 <div id="hint">Inquadra il roll-up</div>
-<div id="tapLayer"></div>
+
+<div id="buttonPanel">
+  <button class="riskButton" onclick="openRisk('stanza')">Stanza / postazione</button>
+  <button class="riskButton" onclick="openRisk('bagno')">Bagno</button>
+  <button class="riskButton" onclick="openRisk('pulizie')">Pulizie e cavi</button>
+  <button class="riskButton" onclick="openRisk('terrazzo')">Terrazzo / esterno</button>
+  <button class="riskButton" onclick="openRisk('scale')">Scale</button>
+  <button class="riskButton" onclick="openRisk('emergenza')">Emergenza</button>
+</div>
 
 <div id="riskBox">
   <h2 id="riskTitle"></h2>
   <p id="riskText"></p>
-  <button id="closeRisk">Chiudi</button>
+  <button id="closeRisk" onclick="closeRisk()">Chiudi</button>
 </div>
 
 <a-scene
@@ -114,108 +125,74 @@
 
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <a-entity id="target" mindar-image-target="targetIndex: 0"></a-entity>
+  <a-entity id="target" mindar-image-target="targetIndex: 0">
+
+    <a-plane position="-0.26 0.18 0.03" width="0.22" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+    <a-plane position="0.28 0.04 0.03" width="0.22" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+    <a-plane position="0.10 -0.20 0.03" width="0.26" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+    <a-plane position="-0.18 -0.42 0.03" width="0.24" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+    <a-plane position="0.24 -0.70 0.03" width="0.22" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+    <a-plane position="-0.36 -0.88 0.03" width="0.24" height="0.10" color="#00a9cf" opacity="0.85"></a-plane>
+
+  </a-entity>
 
 </a-scene>
 
 <script>
-  const posterWidth = 870;
-  const posterHeight = 2048;
-
-  const arWidth = 1;
-  const arHeight = posterHeight / posterWidth;
-
-  const risks = [
-    { x:147, y:1075, title:"Interferenze domestiche", text:"La presenza contemporanea di bambini, animali o altre persone può generare distrazioni, urti e interferenze con l’attività lavorativa." },
-    { x:222, y:1013, title:"Uso improprio di dispositivi", text:"L’uso di dispositivi digitali durante altre attività può ridurre l’attenzione, aumentare il rischio di urti e interferire con la sicurezza dell’ambiente domestico." },
-    { x:349, y:1062, title:"Postazione improvvisata", text:"Schermi, cavi e arredi non pensati per il lavoro possono favorire posture scorrette, inciampi e riduzione dell’attenzione." },
-    { x:681, y:1172, title:"Rischio elettrico in bagno", text:"L’uso di phon o dispositivi elettrici vicino ad acqua, pavimenti bagnati o prese non protette aumenta il rischio elettrico." },
-    { x:682, y:1260, title:"Pavimento bagnato", text:"L’acqua sul pavimento può provocare scivolamenti, cadute e urti, soprattutto se l’attenzione è assorbita da telefono o strumenti digitali." },
-    { x:167, y:1314, title:"Oggetti a terra", text:"Borse, giochi, panni o oggetti lasciati nei percorsi possono diventare ostacoli e aumentare il rischio di inciampo." },
-    { x:242, y:1371, title:"Postura non corretta", text:"Una postazione non regolata correttamente può causare affaticamento visivo, sovraccarico muscoloscheletrico e posture incongrue." },
-    { x:329, y:1321, title:"Alimenti vicino al computer", text:"Mangiare o bere vicino a computer e dispositivi può causare danni alle apparecchiature, distrazioni e contaminazione della postazione." },
-    { x:140, y:1403, title:"Oggetti instabili", text:"Oggetti appoggiati in modo precario o usati impropriamente possono cadere e colpire persone o apparecchiature." },
-    { x:517, y:1432, title:"Pulizie e lavoro digitale", text:"Svolgere attività di pulizia vicino a cavi, multiprese e dispositivi accesi può creare condizioni di scivolamento e rischio elettrico." },
-    { x:634, y:1442, title:"Multiprese e cavi esposti", text:"Cavi attraversati, multiprese sovraccariche o non fissate possono generare inciampi, surriscaldamenti e interruzioni improvvise." },
-    { x:780, y:1351, title:"Animali vicino ai cavi", text:"Animali domestici che giocano o tirano cavi e multiprese possono provocare cadute, scollegamenti improvvisi o rischio elettrico." },
-    { x:790, y:1505, title:"Muffa e ambiente insalubre", text:"Muffa, umidità o scarsa qualità dell’ambiente possono incidere sul comfort, sulla concentrazione e sulla salubrità dello spazio di lavoro." },
-    { x:349, y:1507, title:"Abbagliamento e calore", text:"Luce solare diretta, riflessi sullo schermo e calore eccessivo possono aumentare affaticamento visivo, stress termico e distrazione." },
-    { x:188, y:1554, title:"Rischi biologici all’aperto", text:"Insetti, nidi, animali o elementi naturali possono rappresentare rischi non previsti quando si lavora in spazi esterni." },
-    { x:459, y:1581, title:"Postazione esterna instabile", text:"Tavolini, sedie leggere o superfici irregolari possono rendere instabile la postazione e favorire cadute di dispositivi o perdita di equilibrio." },
-    { x:628, y:1662, title:"Scale e distrazione", text:"Usare telefono, tablet o documenti mentre si percorrono le scale aumenta il rischio di caduta, soprattutto in ambienti con oggetti depositati." },
-    { x:120, y:1720, title:"Presidi antincendio ostruiti", text:"Gli estintori e le vie di accesso devono rimanere visibili e liberi. Oggetti e scatole possono ostacolare l’intervento in emergenza." }
-  ];
+  const riskTexts = {
+    stanza: {
+      title: "Stanza / postazione di lavoro",
+      text: "La postazione domestica può presentare rischi legati a postura non corretta, schermi non regolati, oggetti a terra, bambini o animali in movimento, distrazioni e sovrapposizione tra attività domestiche e lavoro digitale."
+    },
+    bagno: {
+      title: "Bagno",
+      text: "Nel bagno il rischio aumenta per la possibile presenza di acqua, pavimenti bagnati, prese elettriche, phon o altri dispositivi usati in modo improprio. La distrazione può favorire scivolamenti e rischio elettrico."
+    },
+    pulizie: {
+      title: "Pulizie, cavi e multiprese",
+      text: "Pulizie svolte vicino a computer, cavi, alimentatori e multiprese possono creare rischio di inciampo, scivolamento, contatto con liquidi e sovraccarico elettrico."
+    },
+    terrazzo: {
+      title: "Terrazzo / ambiente esterno",
+      text: "Lavorare all’esterno può esporre a luce diretta, abbagliamento, calore, superfici instabili, insetti, elementi biologici e perdita di concentrazione."
+    },
+    scale: {
+      title: "Scale e percorsi",
+      text: "Usare telefono, tablet o documenti mentre si percorrono le scale aumenta il rischio di caduta. Oggetti depositati sui percorsi possono ostacolare il passaggio e aggravare il rischio."
+    },
+    emergenza: {
+      title: "Emergenza e presidi antincendio",
+      text: "Estintori, vie di accesso e percorsi di emergenza devono rimanere visibili e liberi. Scatole, arredi o materiali accumulati possono ostacolare l’intervento in caso di emergenza."
+    }
+  };
 
   const target = document.getElementById("target");
-  const tapLayer = document.getElementById("tapLayer");
+  const hint = document.getElementById("hint");
+  const buttonPanel = document.getElementById("buttonPanel");
 
-  function pixelToAR(px, py) {
-    return {
-      x: (px / posterWidth - 0.5) * arWidth,
-      y: (0.5 - py / posterHeight) * arHeight
-    };
-  }
-
-  function openRisk(risk) {
+  function openRisk(key) {
+    const risk = riskTexts[key];
     document.getElementById("riskTitle").innerText = risk.title;
     document.getElementById("riskText").innerText = risk.text;
     document.getElementById("riskBox").style.display = "block";
+    buttonPanel.style.display = "none";
   }
 
-  document.getElementById("closeRisk").onclick = () => {
+  function closeRisk() {
     document.getElementById("riskBox").style.display = "none";
-  };
-
-  risks.forEach((risk, index) => {
-    const pos = pixelToAR(risk.x, risk.y);
-
-    const dot = document.createElement("a-circle");
-    dot.setAttribute("position", `${pos.x} ${pos.y} 0.04`);
-    dot.setAttribute("radius", "0.026");
-    dot.setAttribute("color", "#ff0000");
-    dot.setAttribute("opacity", "0.95");
-    dot.setAttribute("material", "shader: flat; side: double");
-    dot.setAttribute("animation__pulse", "property: scale; dir: alternate; dur: 700; loop: true; to: 1.25 1.25 1.25");
-    target.appendChild(dot);
-
-    const btn = document.createElement("button");
-    btn.className = "tapButton";
-    btn.setAttribute("aria-label", risk.title);
-    btn.onclick = () => openRisk(risk);
-    btn.ontouchstart = (e) => {
-      e.preventDefault();
-      openRisk(risk);
-    };
-    tapLayer.appendChild(btn);
-    risk.button = btn;
-    risk.arPos = pos;
-  });
-
-  function updateButtons() {
-    risks.forEach((risk) => {
-      const x = risk.x / posterWidth * window.innerWidth;
-      const y = risk.y / posterHeight * window.innerHeight;
-
-      risk.button.style.left = x + "px";
-      risk.button.style.top = y + "px";
-    });
+    buttonPanel.style.display = "grid";
   }
-
-  window.addEventListener("resize", updateButtons);
-  updateButtons();
 
   target.addEventListener("targetFound", () => {
-    document.getElementById("hint").innerText = "Tocca un pallino rosso per leggere il rischio";
-    tapLayer.style.display = "block";
+    hint.innerText = "Scegli un’area del roll-up";
+    buttonPanel.style.display = "grid";
   });
 
   target.addEventListener("targetLost", () => {
-    document.getElementById("hint").innerText = "Inquadra di nuovo il roll-up";
-    tapLayer.style.display = "none";
+    hint.innerText = "Inquadra di nuovo il roll-up";
+    buttonPanel.style.display = "none";
     document.getElementById("riskBox").style.display = "none";
   });
-
-  tapLayer.style.display = "none";
 </script>
 
 </body>

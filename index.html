@@ -15,56 +15,34 @@
       overflow: hidden;
     }
 
-    #controls {
+    #infoBox {
       position: fixed;
       left: 50%;
-      bottom: 18px;
+      bottom: 22px;
       transform: translateX(-50%);
-      width: 92%;
-      max-width: 460px;
-      z-index: 999;
-      display: none;
-    }
-
-    #buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .risk-btn {
-      border: none;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-weight: bold;
-      background: white;
-      color: #111;
-      font-size: 13px;
-    }
-
-    #infoBox {
-      display: none;
-      background: rgba(0,0,0,0.86);
+      width: 88%;
+      max-width: 430px;
+      background: rgba(0,0,0,0.88);
       color: white;
-      padding: 14px;
-      border-radius: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      z-index: 99999;
+      display: none;
       font-size: 15px;
       line-height: 1.4;
     }
 
     #infoTitle {
-      font-weight: bold;
       font-size: 18px;
-      margin-bottom: 6px;
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
     #closeBtn {
-      margin-top: 10px;
+      margin-top: 12px;
+      padding: 8px 12px;
       border: none;
       border-radius: 8px;
-      padding: 8px 12px;
       background: white;
       color: black;
     }
@@ -73,90 +51,113 @@
 
 <body>
 
-  <div id="controls">
-<div id="buttons">
-  <button class="risk-btn" onclick="apriScheda('TEST', 'Se leggi questo testo, la scheda funziona.')">TEST</button>
-</div>
-
-    <div id="infoBox">
-      <div id="infoTitle"></div>
-      <div id="infoText"></div>
-      <button id="closeBtn" onclick="chiudiScheda()">Chiudi</button>
-    </div>
+  <div id="infoBox">
+    <div id="infoTitle"></div>
+    <div id="infoText"></div>
+    <button id="closeBtn">Chiudi</button>
   </div>
 
-<a-scene 
-  mindar-image="imageTargetSrc: targets.mind;"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: true"
-  cursor="rayOrigin: mouse"
-  raycaster="objects: .clickable">
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind;"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: true">
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false"
+      cursor="rayOrigin: mouse"
+      raycaster="objects: .clickable">
+    </a-camera>
 
     <a-entity id="target" mindar-image-target="targetIndex: 0">
 
-<a-plane id="hotspot-bambina"
-         class="clickable"
-         color="red"
-         opacity="0.25"
-         width="0.08"
-         height="0.08"
-         position="-0.25 -0.01 0.02">
-</a-plane>
+      <!-- 1. Riquadro alto sinistra: schermo -->
+      <a-circle id="p1" class="clickable" color="red" radius="0.025" position="-0.19 -0.02 0.03"></a-circle>
 
-      <!-- HIGHLIGHT BOX -->
+      <!-- 2. Bagno: acqua + phon/cavo -->
+      <a-circle id="p2" class="clickable" color="red" radius="0.025" position="0.31 -0.02 0.03"></a-circle>
 
-<a-plane id="box1" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 0.24 0"></a-plane>
-<a-plane id="box2" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 0.24 0"></a-plane>
+      <!-- 3. Cucina: pallone vicino alla mamma, più in alto -->
+      <a-circle id="p3" class="clickable" color="red" radius="0.025" position="-0.18 -0.34 0.03"></a-circle>
 
-<a-plane id="box3" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 0.02 0"></a-plane>
-<a-plane id="box4" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 0.02 0"></a-plane>
+      <!-- 4. Salotto animali: filo tra gatto e bassotto -->
+      <a-circle id="p4" class="clickable" color="red" radius="0.025" position="0.28 -0.34 0.03"></a-circle>
 
-<a-plane id="box5" color="yellow" opacity="0" width="0.6" height="0.4" position="-0.38 -0.20 0"></a-plane>
-<a-plane id="box6" color="yellow" opacity="0" width="0.6" height="0.4" position="0.38 -0.20 0"></a-plane>
+      <!-- 5. Salotto animali: quadro -->
+      <a-circle id="p5" class="clickable" color="red" radius="0.025" position="0.22 -0.24 0.03"></a-circle>
 
-  
+      <!-- 6. Giardino: vicino al sole -->
+      <a-circle id="p6" class="clickable" color="red" radius="0.025" position="-0.08 -0.58 0.03"></a-circle>
+
+      <!-- 7. Scale: macchia nera -->
+      <a-circle id="p7" class="clickable" color="red" radius="0.025" position="0.36 -0.58 0.03"></a-circle>
+
     </a-entity>
-
   </a-scene>
 
   <script>
-    const controls = document.getElementById("controls");
     const infoBox = document.getElementById("infoBox");
     const infoTitle = document.getElementById("infoTitle");
     const infoText = document.getElementById("infoText");
-    const target = document.getElementById("target");
+    const closeBtn = document.getElementById("closeBtn");
 
-  function resetBox() {
-  for (let i = 1; i <= 6; i++) {
-    document.getElementById("box"+i).setAttribute("opacity", "0");
-  }
-}
-
-function apriScheda(titolo, testo) {
-  infoTitle.textContent = titolo;
-  infoText.textContent = testo;
-  infoBox.style.display = "block";
-}
-
-    function chiudiScheda() {
-      infoBox.style.display = "none";
+    function apriScheda(titolo, testo) {
+      infoTitle.textContent = titolo;
+      infoText.textContent = testo;
+      infoBox.style.display = "block";
     }
-document.getElementById("hotspot-bambina").addEventListener("click", () => {
-  apriScheda(
-    "Interferenze lavoro-famiglia",
-    "La presenza di bambini durante il lavoro agile può ridurre la concentrazione, aumentare il rischio di errori e generare stress. La sovrapposizione dei ruoli può portare a minore vigilanza, possibili danni fisici ai dispositivi e perdita accidentale di dati aziendali.",
-    1
-  );
-});
-    target.addEventListener("targetFound", () => {
-      controls.style.display = "block";
+
+    closeBtn.addEventListener("click", function() {
+      infoBox.style.display = "none";
     });
 
-    target.addEventListener("targetLost", () => {
-      controls.style.display = "none";
-      infoBox.style.display = "none";
+    document.getElementById("p1").addEventListener("click", function() {
+      apriScheda(
+        "Interferenze lavoro-famiglia",
+        "La sovrapposizione tra lavoro agile, cura dei figli e presenza di persone fragili può ridurre la concentrazione, aumentare gli errori e generare interferenze organizzative e relazionali."
+      );
+    });
+
+    document.getElementById("p2").addEventListener("click", function() {
+      apriScheda(
+        "Rischio elettrico",
+        "L’uso di dispositivi elettrici vicino ad acqua o pavimenti bagnati aumenta il rischio di contatto elettrico e di scivolamento."
+      );
+    });
+
+    document.getElementById("p3").addEventListener("click", function() {
+      apriScheda(
+        "Disordine e inciampo",
+        "Oggetti lasciati a terra o in zone di passaggio, come giochi o palloni, possono provocare inciampo durante le attività domestiche e lavorative."
+      );
+    });
+
+    document.getElementById("p4").addEventListener("click", function() {
+      apriScheda(
+        "Cavi e animali domestici",
+        "Cavi a terra e animali in movimento possono creare interferenze, cadute, danni ai dispositivi e perdita accidentale di dati."
+      );
+    });
+
+    document.getElementById("p5").addEventListener("click", function() {
+      apriScheda(
+        "Postazione improvvisata",
+        "Lavorare in ambienti domestici non organizzati può favorire distrazione, postura scorretta e interferenze con le attività di casa."
+      );
+    });
+
+    document.getElementById("p6").addEventListener("click", function() {
+      apriScheda(
+        "Esposizione esterna",
+        "Lavorare all’aperto può esporre a calore, abbagliamento, insetti e condizioni ambientali non controllate."
+      );
+    });
+
+    document.getElementById("p7").addEventListener("click", function() {
+      apriScheda(
+        "Umidità e degrado ambientale",
+        "Macchie, muffe o degrado degli ambienti domestici possono indicare condizioni non idonee allo svolgimento sicuro e salubre del lavoro."
+      );
     });
   </script>
 

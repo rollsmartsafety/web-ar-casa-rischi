@@ -221,25 +221,57 @@
 
   const target = document.getElementById("target");
 
-  risks.forEach((risk) => {
-    const pos = pixelToAR(risk.x, risk.y);
+ risks.forEach((risk) => {
 
-    const hotspot = document.createElement("a-circle");
-    hotspot.setAttribute("class", "hotspot");
-    hotspot.setAttribute("position", `${pos.x} ${pos.y} 0.04`);
-    hotspot.setAttribute("radius", "0.026");
-    hotspot.setAttribute("color", "#ff0000");
-    hotspot.setAttribute("opacity", "0.95");
-    hotspot.setAttribute("material", "shader: flat; side: double");
-    hotspot.setAttribute("animation__pulse",
-      "property: scale; dir: alternate; dur: 700; loop: true; to: 1.25 1.25 1.25"
-    );
+  const pos = pixelToAR(risk.x, risk.y);
 
-    hotspot.addEventListener("click", () => openRisk(risk));
-    hotspot.addEventListener("touchstart", () => openRisk(risk));
+  // CONTENITORE
+  const group = document.createElement("a-entity");
+  group.setAttribute("position", `${pos.x} ${pos.y} 0.04`);
 
-    target.appendChild(hotspot);
+  // PALLINO ROSSO VISIBILE
+  const dot = document.createElement("a-circle");
+  dot.setAttribute("radius", "0.026");
+  dot.setAttribute("color", "#ff0000");
+  dot.setAttribute("opacity", "0.95");
+  dot.setAttribute("material", "shader: flat; side: double");
+
+  dot.setAttribute(
+    "animation__pulse",
+    "property: scale; dir: alternate; dur: 700; loop: true; to: 1.25 1.25 1.25"
+  );
+
+  // AREA CLICCABILE INVISIBILE
+  const clickArea = document.createElement("a-plane");
+
+  clickArea.setAttribute("class", "hotspot");
+
+  clickArea.setAttribute("width", "0.12");
+  clickArea.setAttribute("height", "0.12");
+
+  clickArea.setAttribute("position", "0 0 0.02");
+
+  clickArea.setAttribute(
+    "material",
+    "opacity: 0; transparent: true; side: double"
+  );
+
+  // EVENTI CLICK
+  clickArea.addEventListener("click", () => {
+    openRisk(risk);
   });
+
+  clickArea.addEventListener("touchstart", () => {
+    openRisk(risk);
+  });
+
+  // AGGIUNTA
+  group.appendChild(dot);
+  group.appendChild(clickArea);
+
+  target.appendChild(group);
+
+});
 
   target.addEventListener("targetFound", () => {
     document.getElementById("hint").innerText = "Tocca un pallino rosso per leggere il rischio";

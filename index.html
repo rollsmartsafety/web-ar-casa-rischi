@@ -31,34 +31,64 @@
       font-size: 15px;
     }
 
-    #buttonPanel {
+    #buttonLayer {
       position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      width: 94%;
-      max-width: 540px;
+      inset: 0;
       z-index: 9998;
       display: none;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      pointer-events: none;
     }
 
     .riskButton {
+      position: fixed;
+      transform: translate(-50%, -50%);
       border: none;
-      border-radius: 14px;
-      padding: 13px 10px;
+      border-radius: 18px;
+      padding: 11px 14px;
       background: rgba(0, 169, 207, 0.96);
       color: white;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.38);
       cursor: pointer;
+      pointer-events: auto;
+      min-width: 120px;
+      text-align: center;
     }
 
     .riskButton:active {
-      transform: scale(0.97);
+      transform: translate(-50%, -50%) scale(0.96);
       background: rgba(0, 48, 79, 0.96);
+    }
+
+    #btnStanza {
+      left: 30%;
+      top: 48%;
+    }
+
+    #btnBagno {
+      left: 77%;
+      top: 52%;
+    }
+
+    #btnPulizie {
+      left: 62%;
+      top: 67%;
+    }
+
+    #btnTerrazzo {
+      left: 32%;
+      top: 76%;
+    }
+
+    #btnScale {
+      left: 73%;
+      top: 82%;
+    }
+
+    #btnEmergenza {
+      left: 22%;
+      top: 88%;
     }
 
     #riskBox {
@@ -109,13 +139,30 @@
 
   <div id="hint">Inquadra il roll-up</div>
 
-  <div id="buttonPanel">
-    <button class="riskButton" onclick="openRisk('stanza')">Stanza / postazione</button>
-    <button class="riskButton" onclick="openRisk('bagno')">Bagno</button>
-    <button class="riskButton" onclick="openRisk('pulizie')">Pulizie e cavi</button>
-    <button class="riskButton" onclick="openRisk('terrazzo')">Terrazzo / esterno</button>
-    <button class="riskButton" onclick="openRisk('scale')">Scale</button>
-    <button class="riskButton" onclick="openRisk('emergenza')">Emergenza</button>
+  <div id="buttonLayer">
+    <button id="btnStanza" class="riskButton" onclick="openRisk('stanza')">
+      Stanza / postazione
+    </button>
+
+    <button id="btnBagno" class="riskButton" onclick="openRisk('bagno')">
+      Bagno
+    </button>
+
+    <button id="btnPulizie" class="riskButton" onclick="openRisk('pulizie')">
+      Pulizie e cavi
+    </button>
+
+    <button id="btnTerrazzo" class="riskButton" onclick="openRisk('terrazzo')">
+      Terrazzo
+    </button>
+
+    <button id="btnScale" class="riskButton" onclick="openRisk('scale')">
+      Scale
+    </button>
+
+    <button id="btnEmergenza" class="riskButton" onclick="openRisk('emergenza')">
+      Emergenza
+    </button>
   </div>
 
   <div id="riskBox">
@@ -167,7 +214,7 @@
 
     const target = document.getElementById("target");
     const hint = document.getElementById("hint");
-    const buttonPanel = document.getElementById("buttonPanel");
+    const buttonLayer = document.getElementById("buttonLayer");
     const riskBox = document.getElementById("riskBox");
 
     function openRisk(key) {
@@ -177,26 +224,26 @@
       document.getElementById("riskText").innerText = risk.text;
 
       riskBox.style.display = "block";
-      buttonPanel.style.display = "none";
+      buttonLayer.style.display = "none";
       hint.style.display = "none";
     }
 
     function closeRisk() {
       riskBox.style.display = "none";
-      buttonPanel.style.display = "grid";
+      buttonLayer.style.display = "block";
       hint.style.display = "block";
     }
 
     target.addEventListener("targetFound", () => {
-      hint.innerText = "Scegli un ambiente";
+      hint.innerText = "Tocca un ambiente";
       hint.style.display = "block";
-      buttonPanel.style.display = "grid";
+      buttonLayer.style.display = "block";
     });
 
     target.addEventListener("targetLost", () => {
       hint.innerText = "Inquadra di nuovo il roll-up";
       hint.style.display = "block";
-      buttonPanel.style.display = "none";
+      buttonLayer.style.display = "none";
       riskBox.style.display = "none";
     });
   </script>

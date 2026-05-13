@@ -44,7 +44,7 @@
       transform: translate(-50%, -50%);
       border: none;
       border-radius: 18px;
-      padding: 11px 14px;
+      padding: 11px 15px;
       background: rgba(0, 169, 207, 0.96);
       color: white;
       font-size: 14px;
@@ -52,8 +52,9 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.38);
       cursor: pointer;
       pointer-events: auto;
-      min-width: 120px;
+      min-width: 118px;
       text-align: center;
+      letter-spacing: 0.3px;
     }
 
     .riskButton:active {
@@ -61,34 +62,35 @@
       background: rgba(0, 48, 79, 0.96);
     }
 
+    /* POSIZIONE DEI BOTTONI SULL'IMMAGINE */
     #btnStudio {
-      left: 30%;
-      top: 48%;
+      left: 31%;
+      top: 51%;
     }
 
     #btnBagno {
       left: 77%;
-      top: 52%;
-    }
-
-    #btnSalotto {
-      left: 62%;
-      top: 67%;
-    }
-
-    #btnGiardino {
-      left: 32%;
-      top: 76%;
+      top: 55%;
     }
 
     #btnCucina {
-      left: 73%;
-      top: 82%;
+      left: 32%;
+      top: 66%;
+    }
+
+    #btnSalotto {
+      left: 24%;
+      top: 58%;
+    }
+
+    #btnGiardino {
+      left: 34%;
+      top: 76%;
     }
 
     #btnSeminterrato {
-      left: 22%;
-      top: 88%;
+      left: 72%;
+      top: 76%;
     }
 
     #riskBox {
@@ -140,29 +142,31 @@
   <div id="hint">Inquadra il roll-up</div>
 
   <div id="buttonLayer">
-    <button id="btnStudio" class="riskButton" onclick="openRisk('Studio')">
-    Studio
+
+    <button id="btnStudio" class="riskButton" onclick="openRisk('studio')">
+      STUDIO
     </button>
 
     <button id="btnBagno" class="riskButton" onclick="openRisk('bagno')">
-      Bagno
+      BAGNO
     </button>
 
-    <button id="btnSalotto" class="riskButton" onclick="openRisk('Salotto')">
-      Salotto
+    <button id="btnCucina" class="riskButton" onclick="openRisk('cucina')">
+      CUCINA
     </button>
 
-    <button id="btnGiardino" class="riskButton" onclick="openRisk('terrazzo')">
-      Terrazzo
+    <button id="btnSalotto" class="riskButton" onclick="openRisk('salotto')">
+      SALOTTO
     </button>
 
-    <button id="btnCucina" class="riskButton" onclick="openRisk('scale')">
-      Scale
+    <button id="btnGiardino" class="riskButton" onclick="openRisk('giardino')">
+      GIARDINO
     </button>
 
-    <button id="btnSeminterrato" class="riskButton" onclick="openRisk('emergenza')">
-      Emergenza
+    <button id="btnSeminterrato" class="riskButton" onclick="openRisk('seminterrato')">
+      SEMINTERRATO
     </button>
+
   </div>
 
   <div id="riskBox">
@@ -187,34 +191,33 @@
   <script>
     const riskTexts = {
       studio: {
-        title: "Interferenze, ",
-        text: "Salotto / Rischio da interferenza
-
-La presenza contemporanea, nello stesso ambiente, di una postazione di lavoro, di una bambina e di un’attività di assistenza sanitaria domiciliare genera una condizione di rischio da interferenza. Attività diverse, ciascuna con proprie esigenze operative e propri fattori di rischio, si svolgono nello stesso spazio e possono sovrapporsi, riducendo il controllo dell’ambiente.
-
-Il lavoratore può essere esposto a distrazioni, interruzioni frequenti, passaggi improvvisi, urti o inciampi, mentre l’attività assistenziale può richiedere movimenti, attrezzature, materiali o procedure che non sono compatibili con una postazione domestica improvvisata. La presenza della bambina aumenta ulteriormente l’imprevedibilità dello scenario, perché introduce richieste di attenzione, movimento e possibili interferenze con cavi, dispositivi e percorsi.
-
-La sovrapposizione tra lavoro, cura e vita domestica può quindi amplificare i rischi presenti, rendendo necessario separare, per quanto possibile, gli spazi, mantenere liberi i percorsi e organizzare la postazione in modo da ridurre distrazioni e interferenze operative"
+        title: "STUDIO",
+        text: "Nello studio la postazione di lavoro può presentare rischi legati a postura non corretta, illuminazione non adeguata, uso prolungato dei dispositivi digitali, cavi esposti e organizzazione non sicura dello spazio operativo."
       },
+
       bagno: {
-        title: "Bagno",
-        text: "Nel bagno il rischio aumenta per la possibile presenza di acqua, pavimenti bagnati, prese elettriche, phon o altri dispositivi usati in modo improprio. La distrazione può favorire scivolamenti e rischio elettrico."
+        title: "BAGNO",
+        text: "Nel bagno la presenza di acqua, pavimenti bagnati, prese elettriche e dispositivi come phon o caricabatterie può determinare condizioni di rischio elettrico, scivolamento e caduta, soprattutto in caso di distrazione."
       },
-      pulizie: {
-        title: "Pulizie, cavi e multiprese",
-        text: "Pulizie svolte vicino a computer, cavi, alimentatori e multiprese possono creare rischio di inciampo, scivolamento, contatto con liquidi e sovraccarico elettrico."
+
+      cucina: {
+        title: "CUCINA",
+        text: "In cucina la sovrapposizione tra attività domestiche e lavoro può generare distrazioni, interferenze, rischio di urti, scottature, tagli o contatto accidentale con liquidi e superfici calde. La presenza di alimenti vicino ai dispositivi può inoltre danneggiare la postazione."
       },
-      terrazzo: {
-        title: "Terrazzo / ambiente esterno",
-        text: "Lavorare all’esterno può esporre a luce diretta, abbagliamento, calore, superfici instabili, insetti, elementi biologici e perdita di concentrazione."
+
+      salotto: {
+        title: "SALOTTO",
+        text: "Nel salotto la presenza contemporanea di lavoro digitale, vita domestica, bambini e attività di assistenza può generare rischio da interferenza. Attività diverse si sovrappongono nello stesso spazio, aumentando distrazione, interruzioni, urti, inciampi e difficoltà di controllo dell’ambiente."
       },
-      scale: {
-        title: "Scale e percorsi",
-        text: "Usare telefono, tablet o documenti mentre si percorrono le scale aumenta il rischio di caduta. Oggetti depositati sui percorsi possono ostacolare il passaggio e aggravare il rischio."
+
+      giardino: {
+        title: "GIARDINO",
+        text: "Nel giardino o negli spazi esterni il lavoro può essere condizionato da luce diretta, abbagliamento, calore, superfici instabili, insetti, elementi biologici e distrazioni ambientali. La postazione può risultare meno stabile e meno protetta rispetto a uno spazio interno."
       },
-      emergenza: {
-        title: "Emergenza e presidi antincendio",
-        text: "Estintori, vie di accesso e percorsi di emergenza devono rimanere visibili e liberi. Scatole, arredi o materiali accumulati possono ostacolare l’intervento in caso di emergenza."
+
+      seminterrato: {
+        title: "SEMINTERRATO",
+        text: "Nel seminterrato possono essere presenti rischi legati a scarsa illuminazione, umidità, muffa, materiali depositati, percorsi ingombri, cavi, scale e difficoltà di aerazione. L’ambiente può aumentare il rischio di inciampo, caduta e riduzione del comfort lavorativo."
       }
     };
 
@@ -238,6 +241,7 @@ La sovrapposizione tra lavoro, cura e vita domestica può quindi amplificare i r
       riskBox.style.display = "none";
       buttonLayer.style.display = "block";
       hint.style.display = "block";
+      hint.innerText = "Tocca un ambiente";
     }
 
     target.addEventListener("targetFound", () => {

@@ -15,6 +15,7 @@
       overflow: hidden;
     }
 
+    body { margin: 0; font-family: Arial, sans-serif; overflow: hidden; }
     #infoBox {
       position: fixed;
       left: 50%;
@@ -23,8 +24,6 @@
       width: 88%;
       max-width: 430px;
       background: rgba(0,0,0,0.88);
-      max-width: 460px;
-      background: rgba(0,0,0,0.9);
       color: white;
       padding: 16px;
       border-radius: 16px;
@@ -32,7 +31,6 @@
       display: none;
       font-size: 15px;
       line-height: 1.4;
-      box-sizing: border-box;
     }
 
     #infoTitle {
@@ -41,36 +39,14 @@
       margin-bottom: 8px;
     }
 
+    #infoTitle { font-size: 18px; font-weight: bold; margin-bottom: 8px; }
     #closeBtn {
-    #riskInput {
-      width: 100%;
-      min-height: 110px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      padding: 10px;
-      resize: vertical;
-      box-sizing: border-box;
-      margin-top: 6px;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    #actions {
-      display: flex;
-      gap: 8px;
       margin-top: 12px;
-    }
-
-    .actionBtn {
       padding: 8px 12px;
       border: none;
       border-radius: 8px;
       background: white;
       color: black;
-      font-weight: 600;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -81,11 +57,6 @@
     <div id="infoTitle"></div>
     <div id="infoText"></div>
     <button id="closeBtn">Chiudi</button>
-    <textarea id="riskInput" placeholder="Inserisci qui la dinamica di rischio..."></textarea>
-    <div id="actions">
-      <button id="saveBtn" class="actionBtn">Salva</button>
-      <button id="closeBtn" class="actionBtn">Chiudi</button>
-    </div>
   </div>
 
 <a-scene
@@ -94,15 +65,17 @@
   device-orientation-permission-ui="enabled: true"
   cursor="rayOrigin: mouse; fuse: false"
   raycaster="objects: .clickable">
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind;"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: true"
 >
 
 <a-camera
   position="0 0 0"
   look-controls="enabled: false">
-  look-controls="enabled: false"
-  cursor="rayOrigin: mouse; fuse: false"
-  raycaster="objects: .clickable; far: 10000">
 </a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false" cursor="rayOrigin: mouse; fuse: false" raycaster="objects: .clickable; far: 100000"></a-camera>
 
     <a-entity id="target" mindar-image-target="targetIndex: 0">
 
@@ -127,6 +100,14 @@
       <!-- 7. Scale: macchia nera -->
       <a-circle id="p7" class="clickable" color="red" radius="0.025" position="0.36 -0.58 0.03"></a-circle>
 
+      <!-- hitbox più grande per facilitare il tap su mobile -->
+      <a-circle class="clickable" data-point="p1" opacity="0" radius="0.07" position="-0.19 -0.02 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p2" opacity="0" radius="0.07" position="0.31 -0.02 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p3" opacity="0" radius="0.07" position="-0.18 -0.34 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p4" opacity="0" radius="0.07" position="0.28 -0.34 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p5" opacity="0" radius="0.07" position="0.22 -0.24 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p6" opacity="0" radius="0.07" position="-0.08 -0.58 0.029"></a-circle>
+      <a-circle class="clickable" data-point="p7" opacity="0" radius="0.07" position="0.36 -0.58 0.029"></a-circle>
     </a-entity>
   </a-scene>
 
@@ -134,39 +115,52 @@
     const infoBox = document.getElementById("infoBox");
     const infoTitle = document.getElementById("infoTitle");
     const infoText = document.getElementById("infoText");
-    const riskInput = document.getElementById("riskInput");
     const closeBtn = document.getElementById("closeBtn");
 
     function apriScheda(titolo, testo) {
       infoTitle.textContent = titolo;
       infoText.textContent = testo;
-    const saveBtn = document.getElementById("saveBtn");
-
     const rischi = {
-      p1: { titolo: "Interferenze lavoro-famiglia", testo: "" },
-      p2: { titolo: "Rischio elettrico", testo: "" },
-      p3: { titolo: "Disordine e inciampo", testo: "" },
-      p4: { titolo: "Cavi e animali domestici", testo: "" },
-      p5: { titolo: "Postazione improvvisata", testo: "" },
-      p6: { titolo: "Esposizione esterna", testo: "" },
-      p7: { titolo: "Umidità e degrado ambientale", testo: "" }
+      p1: {
+        titolo: "Interferenze lavoro-famiglia",
+        testo: "La sovrapposizione tra lavoro agile, cura dei figli e presenza di persone fragili può ridurre la concentrazione, aumentare gli errori e generare interferenze organizzative e relazionali."
+      },
+      p2: {
+        titolo: "Rischio elettrico",
+        testo: "L’uso di dispositivi elettrici vicino ad acqua o pavimenti bagnati aumenta il rischio di contatto elettrico e di scivolamento."
+      },
+      p3: {
+        titolo: "Disordine e inciampo",
+        testo: "Oggetti lasciati a terra o in zone di passaggio, come giochi o palloni, possono provocare inciampo durante le attività domestiche e lavorative."
+      },
+      p4: {
+        titolo: "Cavi e animali domestici",
+        testo: "Cavi a terra e animali in movimento possono creare interferenze, cadute, danni ai dispositivi e perdita accidentale di dati."
+      },
+      p5: {
+        titolo: "Postazione improvvisata",
+        testo: "Lavorare in ambienti domestici non organizzati può favorire distrazione, postura scorretta e interferenze con le attività di casa."
+      },
+      p6: {
+        titolo: "Esposizione esterna",
+        testo: "Lavorare all’aperto può esporre a calore, abbagliamento, insetti e condizioni ambientali non controllate."
+      },
+      p7: {
+        titolo: "Umidità e degrado ambientale",
+        testo: "Macchie, muffe o degrado degli ambienti domestici possono indicare condizioni non idonee allo svolgimento sicuro e salubre del lavoro."
+      }
     };
-
-    let puntoAttivo = null;
 
     function apriScheda(idPunto) {
       const scheda = rischi[idPunto];
-      puntoAttivo = idPunto;
+      if (!scheda) return;
       infoTitle.textContent = scheda.titolo;
-      infoText.textContent = "Dinamica di rischio:";
-      riskInput.value = scheda.testo;
+      infoText.textContent = scheda.testo;
       infoBox.style.display = "block";
-      riskInput.focus();
     }
 
     closeBtn.addEventListener("click", function() {
       infoBox.style.display = "none";
-      puntoAttivo = null;
     });
 
     document.getElementById("p1").addEventListener("click", function() {
@@ -209,11 +203,6 @@
         "Esposizione esterna",
         "Lavorare all’aperto può esporre a calore, abbagliamento, insetti e condizioni ambientali non controllate."
       );
-    saveBtn.addEventListener("click", function() {
-      if (!puntoAttivo) return;
-      rischi[puntoAttivo].testo = riskInput.value.trim();
-      infoBox.style.display = "none";
-      puntoAttivo = null;
     });
 
     document.getElementById("p7").addEventListener("click", function() {
@@ -221,11 +210,10 @@
         "Umidità e degrado ambientale",
         "Macchie, muffe o degrado degli ambienti domestici possono indicare condizioni non idonee allo svolgimento sicuro e salubre del lavoro."
       );
-    Object.keys(rischi).forEach(function(idPunto) {
-      const pallino = document.getElementById(idPunto);
-      ["click", "touchstart", "mousedown"].forEach(function(eventName) {
-        pallino.addEventListener(eventName, function(event) {
-          event.preventDefault();
+    document.querySelectorAll(".clickable").forEach(function(el) {
+      const idPunto = el.id || el.getAttribute("data-point");
+      ["click", "mousedown", "touchstart"].forEach(function(eventName) {
+        el.addEventListener(eventName, function() {
           apriScheda(idPunto);
         });
       });

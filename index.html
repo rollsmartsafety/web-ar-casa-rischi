@@ -29,22 +29,28 @@
       font-weight: bold;
       text-align: center;
       font-size: 15px;
+      max-width: 90%;
     }
 
+    /* BARRA ORDINATA DEI BOTTONI IN BASSO */
     #buttonLayer {
       position: fixed;
-      inset: 0;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: 94%;
+      max-width: 560px;
       z-index: 9998;
       display: none;
-      pointer-events: none;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      pointer-events: auto;
     }
 
     .riskButton {
-      position: fixed;
-      transform: translate(-50%, -50%);
       border: none;
       border-radius: 18px;
-      padding: 11px 15px;
+      padding: 12px 10px;
       background: rgba(0, 169, 207, 0.96);
       color: white;
       font-size: 14px;
@@ -52,45 +58,13 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.38);
       cursor: pointer;
       pointer-events: auto;
-      min-width: 118px;
       text-align: center;
       letter-spacing: 0.3px;
     }
 
     .riskButton:active {
-      transform: translate(-50%, -50%) scale(0.96);
+      transform: scale(0.97);
       background: rgba(0, 48, 79, 0.96);
-    }
-
-    /* POSIZIONE DEI BOTTONI SULL'IMMAGINE */
-    #btnStudio {
-      left: 31%;
-      top: 51%;
-    }
-
-    #btnBagno {
-      left: 77%;
-      top: 55%;
-    }
-
-    #btnCucina {
-      left: 32%;
-      top: 66%;
-    }
-
-    #btnSalotto {
-      left: 24%;
-      top: 58%;
-    }
-
-    #btnGiardino {
-      left: 34%;
-      top: 76%;
-    }
-
-    #btnSeminterrato {
-      left: 72%;
-      top: 76%;
     }
 
     #riskBox {
@@ -239,7 +213,7 @@
 
     function closeRisk() {
       riskBox.style.display = "none";
-      buttonLayer.style.display = "block";
+      buttonLayer.style.display = "grid";
       hint.style.display = "block";
       hint.innerText = "Tocca un ambiente";
     }
@@ -247,7 +221,7 @@
     target.addEventListener("targetFound", () => {
       hint.innerText = "Tocca un ambiente";
       hint.style.display = "block";
-      buttonLayer.style.display = "block";
+      buttonLayer.style.display = "grid";
     });
 
     target.addEventListener("targetLost", () => {

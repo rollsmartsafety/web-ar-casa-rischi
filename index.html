@@ -23,6 +23,8 @@
       width: 88%;
       max-width: 430px;
       background: rgba(0,0,0,0.88);
+      max-width: 460px;
+      background: rgba(0,0,0,0.9);
       color: white;
       padding: 16px;
       border-radius: 16px;
@@ -30,6 +32,7 @@
       display: none;
       font-size: 15px;
       line-height: 1.4;
+      box-sizing: border-box;
     }
 
     #infoTitle {
@@ -39,12 +42,35 @@
     }
 
     #closeBtn {
+    #riskInput {
+      width: 100%;
+      min-height: 110px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      padding: 10px;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: 6px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    #actions {
+      display: flex;
+      gap: 8px;
       margin-top: 12px;
+    }
+
+    .actionBtn {
       padding: 8px 12px;
       border: none;
       border-radius: 8px;
       background: white;
       color: black;
+      font-weight: 600;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -55,6 +81,11 @@
     <div id="infoTitle"></div>
     <div id="infoText"></div>
     <button id="closeBtn">Chiudi</button>
+    <textarea id="riskInput" placeholder="Inserisci qui la dinamica di rischio..."></textarea>
+    <div id="actions">
+      <button id="saveBtn" class="actionBtn">Salva</button>
+      <button id="closeBtn" class="actionBtn">Chiudi</button>
+    </div>
   </div>
 
 <a-scene
@@ -99,16 +130,39 @@
     const infoBox = document.getElementById("infoBox");
     const infoTitle = document.getElementById("infoTitle");
     const infoText = document.getElementById("infoText");
+    const riskInput = document.getElementById("riskInput");
     const closeBtn = document.getElementById("closeBtn");
 
     function apriScheda(titolo, testo) {
       infoTitle.textContent = titolo;
       infoText.textContent = testo;
+    const saveBtn = document.getElementById("saveBtn");
+
+    const rischi = {
+      p1: { titolo: "Interferenze lavoro-famiglia", testo: "" },
+      p2: { titolo: "Rischio elettrico", testo: "" },
+      p3: { titolo: "Disordine e inciampo", testo: "" },
+      p4: { titolo: "Cavi e animali domestici", testo: "" },
+      p5: { titolo: "Postazione improvvisata", testo: "" },
+      p6: { titolo: "Esposizione esterna", testo: "" },
+      p7: { titolo: "Umidità e degrado ambientale", testo: "" }
+    };
+
+    let puntoAttivo = null;
+
+    function apriScheda(idPunto) {
+      const scheda = rischi[idPunto];
+      puntoAttivo = idPunto;
+      infoTitle.textContent = scheda.titolo;
+      infoText.textContent = "Dinamica di rischio:";
+      riskInput.value = scheda.testo;
       infoBox.style.display = "block";
+      riskInput.focus();
     }
 
     closeBtn.addEventListener("click", function() {
       infoBox.style.display = "none";
+      puntoAttivo = null;
     });
 
     document.getElementById("p1").addEventListener("click", function() {
@@ -151,6 +205,11 @@
         "Esposizione esterna",
         "Lavorare all’aperto può esporre a calore, abbagliamento, insetti e condizioni ambientali non controllate."
       );
+    saveBtn.addEventListener("click", function() {
+      if (!puntoAttivo) return;
+      rischi[puntoAttivo].testo = riskInput.value.trim();
+      infoBox.style.display = "none";
+      puntoAttivo = null;
     });
 
     document.getElementById("p7").addEventListener("click", function() {
@@ -158,6 +217,11 @@
         "Umidità e degrado ambientale",
         "Macchie, muffe o degrado degli ambienti domestici possono indicare condizioni non idonee allo svolgimento sicuro e salubre del lavoro."
       );
+    Object.keys(rischi).forEach(function(idPunto) {
+      const pallino = document.getElementById(idPunto);
+      pallino.addEventListener("click", function() {
+        apriScheda(idPunto);
+      });
     });
   </script>
 

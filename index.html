@@ -32,7 +32,6 @@
       max-width: 90%;
     }
 
-    /* BARRA ORDINATA DEI BOTTONI IN BASSO */
     #buttonLayer {
       position: fixed;
       left: 50%;
@@ -74,6 +73,8 @@
       transform: translateX(-50%);
       width: 88%;
       max-width: 540px;
+      max-height: 68vh;
+      overflow-y: auto;
       background: white;
       border: 4px solid #00304f;
       border-radius: 18px;
@@ -84,21 +85,26 @@
     }
 
     #riskBox h2 {
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       color: #00304f;
       font-size: 22px;
       line-height: 1.2;
     }
 
-    #riskBox p {
+    #riskText {
       margin: 0;
       color: #222;
-      font-size: 17px;
-      line-height: 1.35;
+      font-size: 16px;
+      line-height: 1.38;
+      white-space: pre-line;
+    }
+
+    #riskText strong {
+      color: #00304f;
     }
 
     #closeRisk {
-      margin-top: 14px;
+      margin-top: 16px;
       background: #00304f;
       color: white;
       border: none;
@@ -145,7 +151,7 @@
 
   <div id="riskBox">
     <h2 id="riskTitle"></h2>
-    <p id="riskText"></p>
+    <div id="riskText"></div>
     <button id="closeRisk" onclick="closeRisk()">Chiudi</button>
   </div>
 
@@ -166,32 +172,50 @@
     const riskTexts = {
       studio: {
         title: "STUDIO",
-        text: "Nello studio la postazione di lavoro può presentare rischi legati a postura non corretta, illuminazione non adeguata, uso prolungato dei dispositivi digitali, cavi esposti e organizzazione non sicura dello spazio operativo."
+        html: `
+          <p><strong>Interferenze:</strong> sovrapposizione nello stesso luogo o nello stesso arco temporale di attività lavorative diverse che possono influire reciprocamente sui rischi e sulle prestazioni, generando interruzioni, errori o peggioramento della sicurezza.</p>
+
+          <p><strong>Presenze familiari:</strong> presenza di persone non lavoratrici, come familiari, conviventi o ospiti, nello stesso ambiente di lavoro agile, la cui vicinanza o il cui intervento può modificare il contesto operativo e aumentare i rischi di disturbo o intralcio.</p>
+
+          <p><strong>Distrazioni:</strong> stimoli esterni o interni, come rumori, richieste verbali, dispositivi personali o attività domestiche, che sottraggono attenzione al lavoratore, riducendo la concentrazione e aumentando la probabilità di errori.</p>
+
+          <p><strong>Postazione non idonea:</strong> luogo o attrezzatura di lavoro non conformi ai requisiti ergonomici o di sicurezza, come sedia o scrivania inadeguate, schermo mal posizionato, illuminazione scarsa o impianto elettrico non conforme, che possono causare disturbi muscolo-scheletrici, affaticamento visivo o rischi elettrici.</p>
+        `
       },
 
       bagno: {
         title: "BAGNO",
-        text: "Nel bagno la presenza di acqua, pavimenti bagnati, prese elettriche e dispositivi come phon o caricabatterie può determinare condizioni di rischio elettrico, scivolamento e caduta, soprattutto in caso di distrazione."
+        html: `
+          <p>Nel bagno la presenza di acqua, pavimenti bagnati, prese elettriche e dispositivi come phon o caricabatterie può determinare condizioni di rischio elettrico, scivolamento e caduta, soprattutto in caso di distrazione.</p>
+        `
       },
 
       cucina: {
         title: "CUCINA",
-        text: "In cucina la sovrapposizione tra attività domestiche e lavoro può generare distrazioni, interferenze, rischio di urti, scottature, tagli o contatto accidentale con liquidi e superfici calde. La presenza di alimenti vicino ai dispositivi può inoltre danneggiare la postazione."
+        html: `
+          <p>In cucina la sovrapposizione tra attività domestiche e lavoro può generare distrazioni, interferenze, rischio di urti, scottature, tagli o contatto accidentale con liquidi e superfici calde. La presenza di alimenti vicino ai dispositivi può inoltre danneggiare la postazione.</p>
+        `
       },
 
       salotto: {
         title: "SALOTTO",
-        text: "Nel salotto la presenza contemporanea di lavoro digitale, vita domestica, bambini e attività di assistenza può generare rischio da interferenza. Attività diverse si sovrappongono nello stesso spazio, aumentando distrazione, interruzioni, urti, inciampi e difficoltà di controllo dell’ambiente."
+        html: `
+          <p>Nel salotto la presenza contemporanea di lavoro digitale, vita domestica, bambini e attività di assistenza può generare rischio da interferenza. Attività diverse si sovrappongono nello stesso spazio, aumentando distrazione, interruzioni, urti, inciampi e difficoltà di controllo dell’ambiente.</p>
+        `
       },
 
       giardino: {
         title: "GIARDINO",
-        text: "Nel giardino o negli spazi esterni il lavoro può essere condizionato da luce diretta, abbagliamento, calore, superfici instabili, insetti, elementi biologici e distrazioni ambientali. La postazione può risultare meno stabile e meno protetta rispetto a uno spazio interno."
+        html: `
+          <p>Nel giardino o negli spazi esterni il lavoro può essere condizionato da luce diretta, abbagliamento, calore, superfici instabili, insetti, elementi biologici e distrazioni ambientali. La postazione può risultare meno stabile e meno protetta rispetto a uno spazio interno.</p>
+        `
       },
 
       seminterrato: {
         title: "SEMINTERRATO",
-        text: "Nel seminterrato possono essere presenti rischi legati a scarsa illuminazione, umidità, muffa, materiali depositati, percorsi ingombri, cavi, scale e difficoltà di aerazione. L’ambiente può aumentare il rischio di inciampo, caduta e riduzione del comfort lavorativo."
+        html: `
+          <p>Nel seminterrato possono essere presenti rischi legati a scarsa illuminazione, umidità, muffa, materiali depositati, percorsi ingombri, cavi, scale e difficoltà di aerazione. L’ambiente può aumentare il rischio di inciampo, caduta e riduzione del comfort lavorativo.</p>
+        `
       }
     };
 
@@ -199,13 +223,16 @@
     const hint = document.getElementById("hint");
     const buttonLayer = document.getElementById("buttonLayer");
     const riskBox = document.getElementById("riskBox");
+    const riskTitle = document.getElementById("riskTitle");
+    const riskText = document.getElementById("riskText");
 
     function openRisk(key) {
       const risk = riskTexts[key];
 
-      document.getElementById("riskTitle").innerText = risk.title;
-      document.getElementById("riskText").innerText = risk.text;
+      riskTitle.innerText = risk.title;
+      riskText.innerHTML = risk.html;
 
+      riskBox.scrollTop = 0;
       riskBox.style.display = "block";
       buttonLayer.style.display = "none";
       hint.style.display = "none";

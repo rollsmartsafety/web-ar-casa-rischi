@@ -61,7 +61,7 @@
       background: rgba(0, 48, 79, 0.96);
     }
 
-    #btnStanza {
+    #btnStudio {
       left: 30%;
       top: 48%;
     }
@@ -71,22 +71,22 @@
       top: 52%;
     }
 
-    #btnPulizie {
+    #btnSalotto {
       left: 62%;
       top: 67%;
     }
 
-    #btnTerrazzo {
+    #btnGiardino {
       left: 32%;
       top: 76%;
     }
 
-    #btnScale {
+    #btnCucina {
       left: 73%;
       top: 82%;
     }
 
-    #btnEmergenza {
+    #btnSeminterrato {
       left: 22%;
       top: 88%;
     }
@@ -140,7 +140,7 @@
   <div id="hint">Inquadra il roll-up</div>
 
   <div id="buttonLayer">
-    <button id="btnStanza" class="riskButton" onclick="openRisk('stanza')">
+    <button id="btnStudio" class="riskButton" onclick="openRisk('stanza')">
       Stanza / postazione
     </button>
 
@@ -148,19 +148,19 @@
       Bagno
     </button>
 
-    <button id="btnPulizie" class="riskButton" onclick="openRisk('pulizie')">
+    <button id="btnSalotto" class="riskButton" onclick="openRisk('pulizie')">
       Pulizie e cavi
     </button>
 
-    <button id="btnTerrazzo" class="riskButton" onclick="openRisk('terrazzo')">
+    <button id="btnGiardino" class="riskButton" onclick="openRisk('terrazzo')">
       Terrazzo
     </button>
 
-    <button id="btnScale" class="riskButton" onclick="openRisk('scale')">
+    <button id="btnCucina" class="riskButton" onclick="openRisk('scale')">
       Scale
     </button>
 
-    <button id="btnEmergenza" class="riskButton" onclick="openRisk('emergenza')">
+    <button id="btnSeminterrato" class="riskButton" onclick="openRisk('emergenza')">
       Emergenza
     </button>
   </div>
@@ -186,9 +186,15 @@
 
   <script>
     const riskTexts = {
-      stanza: {
-        title: "Stanza / postazione di lavoro",
-        text: "La postazione domestica può presentare rischi legati a postura non corretta, schermi non regolati, oggetti a terra, bambini o animali in movimento, distrazioni e sovrapposizione tra attività domestiche e lavoro digitale."
+      studio: {
+        title: "Interferenze, ",
+        text: "Salotto / Rischio da interferenza
+
+La presenza contemporanea, nello stesso ambiente, di una postazione di lavoro, di una bambina e di un’attività di assistenza sanitaria domiciliare genera una condizione di rischio da interferenza. Attività diverse, ciascuna con proprie esigenze operative e propri fattori di rischio, si svolgono nello stesso spazio e possono sovrapporsi, riducendo il controllo dell’ambiente.
+
+Il lavoratore può essere esposto a distrazioni, interruzioni frequenti, passaggi improvvisi, urti o inciampi, mentre l’attività assistenziale può richiedere movimenti, attrezzature, materiali o procedure che non sono compatibili con una postazione domestica improvvisata. La presenza della bambina aumenta ulteriormente l’imprevedibilità dello scenario, perché introduce richieste di attenzione, movimento e possibili interferenze con cavi, dispositivi e percorsi.
+
+La sovrapposizione tra lavoro, cura e vita domestica può quindi amplificare i rischi presenti, rendendo necessario separare, per quanto possibile, gli spazi, mantenere liberi i percorsi e organizzare la postazione in modo da ridurre distrazioni e interferenze operative"
       },
       bagno: {
         title: "Bagno",
